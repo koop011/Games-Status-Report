@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# .gitignore given
+api/api
+racing/racing
+.DS_STORE
+.idea
+.vscode

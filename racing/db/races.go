@@ -2,11 +2,13 @@ package db
 
 import (
 	"database/sql"
-	"github.com/golang/protobuf/ptypes"
-	_ "github.com/mattn/go-sqlite3"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/golang/protobuf/ptypes"
+	_ "github.com/mattn/go-sqlite3"
 
 	"git.neds.sh/matty/entain/racing/proto/racing"
 )
@@ -18,6 +20,7 @@ type RacesRepo interface {
 
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
+	UpdateAllRacesByColumn(races []*racing.Race, columnName string)
 }
 
 type racesRepo struct {
@@ -33,13 +36,36 @@ func NewRacesRepo(db *sql.DB) RacesRepo {
 // Init prepares the race repository dummy data.
 func (r *racesRepo) Init() error {
 	var err error
+	var columnName string = "status"
 
 	r.init.Do(func() {
 		// For test/example purposes, we seed the DB with some dummy races.
 		err = r.seed()
+		err = r.addColumnToRacesTable(columnName)
 	})
 
 	return err
+}
+
+/*
+races: Races database in array.
+columnName: Name of the column in Races database.
+*/
+func (r *racesRepo) UpdateAllRacesByColumn(races []*racing.Race, columnName string) {
+	var currentTime = time.Now()
+	var raceStatusClosed string = "CLOSED"
+	var raceStatusOpen string = "OPEN"
+
+	for _, race := range races {
+		raceID := strconv.Itoa(int(race.GetId()))
+
+		// Update the Races database status column after checking the GetAdvertisedStartTime().
+		if race.GetAdvertisedStartTime().AsTime().Before(currentTime) {
+			r.updateRacesTable(columnName, raceStatusClosed, raceID)
+		} else {
+			r.updateRacesTable(columnName, raceStatusOpen, raceID)
+		}
+	}
 }
 
 func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error) {
@@ -94,8 +120,9 @@ func (m *racesRepo) scanRaces(
 	for rows.Next() {
 		var race racing.Race
 		var advertisedStart time.Time
+		var status sql.NullString
 
-		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart); err != nil {
+		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart, &status); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, nil
 			}

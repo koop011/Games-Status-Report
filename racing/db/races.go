@@ -76,7 +76,6 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 	)
 
 	query = getRaceQueries()[racesList]
-
 	query, args = r.applyFilter(query, filter)
 
 	rows, err := r.db.Query(query, args...)

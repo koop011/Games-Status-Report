@@ -120,9 +120,8 @@ func (m *racesRepo) scanRaces(
 	for rows.Next() {
 		var race racing.Race
 		var advertisedStart time.Time
-		var status sql.NullString
 
-		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart, &status); err != nil {
+		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart, &race.Status); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, nil
 			}

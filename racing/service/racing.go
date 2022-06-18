@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"sort"
 
 	"git.neds.sh/matty/entain/racing/db"
@@ -24,12 +25,16 @@ func NewRacingService(racesRepo db.RacesRepo) Racing {
 }
 
 func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesRequest) (*racing.ListRacesResponse, error) {
+	// TODO: implement string array for multiple column creation
+	var statusColumn string = "status"
+
 	races, err := s.racesRepo.List(in.Filter)
 	if err != nil {
 		return nil, err
 	}
-	races = raceReportSortByAdvertisedTime(races)
-
+	raceReportSortByAdvertisedTime(races)
+	s.racesRepo.UpdateAllRacesByColumn(races, statusColumn)
+	log.Print(races)
 	return &racing.ListRacesResponse{Races: races}, nil
 }
 

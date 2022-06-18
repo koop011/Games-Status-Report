@@ -33,6 +33,7 @@ func (r *racesRepo) seed() error {
 columnName: name of the column to be added to existing Races database.
 
 Called during racesRepo.Init().
+TODO: update to parse array of string to create multiple columnNames at the same time.
 */
 func (r *racesRepo) addColumnToRacesTable(columnName string) error {
 

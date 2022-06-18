@@ -12,6 +12,7 @@ service Racing {
 
 /* Requests/Responses */
 
+// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
 }
@@ -24,6 +25,7 @@ message ListRacesResponse {
 // Filter for listing races.
 message ListRacesRequestFilter {
   repeated int64 meeting_ids = 1;
+  repeated bool race_visibilty = 2;
 }
 
 /* Resources */

@@ -16,3 +16,10 @@ Added `raceReportSortByAdvertisedTime()` to the `ListRaces()` so any newly added
 ### Task 2 - Reflection
 I haven't implemented the bonus task as I usually tend to the MVP first and apply any additional feature/upgrades after discussing with the team and client. I'm working this task as how I would usually work in an environment with a team and assuming I would have to deliver the MVP first then bonus tasks at the end when MVP has been completed.
 
+## Task 3
+Added a new message field to `Race` to api and racing server. This allows user to visually see if a certain types of races are CLOSED or OPEN depending on the current time.
+
+The database table is modified on runtime with when the `ListRaces` is called to update the status of all races. Cases that was considered was when a new race is added or just simply, time passing, the listed races needs to be up to date/time. I tried to make the code to account for future implementations or modifications needed to the database and made the functions more generic to add additional columns on runtime and modify the status at the same time.
+
+### Task 3 - Reflection
+It's been a while since I handled any database query (sqlite) so having to set this up was quite fun. I faced some difficulty when trying to make sure I was using the correct syntax to modify the selected row of the database but after a few tries (and bunch of online searching) I found out the best way I could implement how to add a new column. Unfortunately, I made a poor implementation to decern if the column of a specific name already exists. I couldn't figure out how to use the `INSER OR IGNORE` or if I could find an alternative to `IF NOT EXIST` command for sqlite3, so I made a dodgy error handling to ignore the 'duplicate column exists' error. In my future attempts, hopefully I'll understand the correct keywords necessary. 

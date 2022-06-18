@@ -55,16 +55,16 @@ func (r *racesRepo) addColumnToRacesTable(columnName string) error {
 
 /*
 columnName: Name of the column in Races database.
-raceStatus: "OPEN"|"CLOSED".
+value: variable to insert into the database based.
 id: Races database id key value.
 
-Called when receiving ListRacesRequest message to update the Races database using columnName and id key value of each races to insert the raceStatus
+Called when receiving ListRacesRequest message to update the Races database using columnName and id key value of each races to update the database
 before ListRacesResponse is sent.
 */
-func (r *racesRepo) updateRacesTable(columnName string, raceStatus string, id string) error {
+func (r *racesRepo) updateRacesTable(columnName string, value string, id string) error {
 	var err error
 
-	statement, err := r.db.Prepare(`UPDATE races SET ` + columnName + ` = "` + raceStatus + `" WHERE id = ` + id)
+	statement, err := r.db.Prepare(`UPDATE races SET ` + columnName + ` = "` + value + `" WHERE id = ` + id)
 	if err == nil {
 		_, err = statement.Exec()
 	}

@@ -20,7 +20,7 @@ type RacesRepo interface {
 
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
-	UpdateAllRacesByColumn(races []*racing.Race, columnName string)
+	UpdateAllRacesByColumn(races []*racing.Race)
 }
 
 type racesRepo struct {
@@ -51,10 +51,27 @@ func (r *racesRepo) Init() error {
 races: Races database in array.
 columnName: Name of the column in Races database.
 */
-func (r *racesRepo) UpdateAllRacesByColumn(races []*racing.Race, columnName string) {
+func (r *racesRepo) UpdateAllRacesByColumn(races []*racing.Race) {
+	// Column names within the array will be updated using switch statements to configure what types of update is necessary.
+	columnNames := []string{
+		"status",
+	}
+
+	// Can be configurable to add in different types of column names to update the database.
+	for _, columnName := range columnNames {
+		switch columnName {
+		case "status":
+			r.updateRaceStatus(races, columnName)
+		}
+	}
+}
+
+func (r *racesRepo) updateRaceStatus(races []*racing.Race, columnName string) {
 	var currentTime = time.Now()
-	var raceStatusClosed string = "CLOSED"
-	var raceStatusOpen string = "OPEN"
+	const (
+		raceStatusOpen   string = "OPEN"
+		raceStatusClosed string = "CLOSED"
+	)
 
 	for _, race := range races {
 		raceID := strconv.Itoa(int(race.GetId()))

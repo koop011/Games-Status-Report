@@ -21,7 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 type ListRacesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -275,8 +274,13 @@ func (x *GetRaceResponse) GetRace() []*Race {
 	return nil
 }
 
-// TODO: have better sort order definition
-// (e.g. advertised time: earliest_to_latest, name: alphabetical, id/number/meetingid: low_to_high,)
+//
+//Additional sort order user/operator can specify.
+//
+//low_to_high: indicate integer sorting from lowest to highest number.
+//alphabetical: indicate alphabetical sorting from a-z.
+//earliest_to_latest: indicate earliest time to latest time for advertised start time sorting.
+//ordered_item: type of key value from the races (e.g. id|meetingid|name|number|start time) to sort.
 type SortOrder struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

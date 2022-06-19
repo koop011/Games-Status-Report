@@ -23,7 +23,6 @@ const (
 )
 
 // Request for ListRaces call.
-// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 type ListRacesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -277,8 +276,7 @@ func (x *GetRaceResponse) GetRace() []*Race {
 	return nil
 }
 
-// TODO: have better sort order definition
-// (e.g. advertised time: earliest_to_latest, name: alphabetical, id/number/meetingid: low_to_high,)
+// Additional sort order user/operator can specify.
 type SortOrder struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

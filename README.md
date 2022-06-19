@@ -63,4 +63,7 @@ operable program or batch file.
 ```
 
 ### Task 4 - Reflection
-Unfortuantely I don't have much to say other than my lack of knowledge in this area to complete this task. It was fun and I felt pretty comfortable using the grpc/protoc tool with golang as it handled much of the difficult and tedious tasks already, but I realize setting up the environment properly from the get go is also important to utilize this tool. I noticed the failure of the go:generate in api.go from Task 1 but didn't investigate any further as I was able to build the pb.go and grpc.pb.go from another command and didn't realize the importance of the 'protoc-gen-grpc-gateway' imports.
+Unfortuantely I don't have much to say other than my lack of knowledge in this area to complete this task. Honestly, I can't say for sure that it's the fault of the 'protoc-gen-grpc-gateway' since I saw all the imports avaialble in go.sum/go.mod. To me, it looked like it was all there, but the compiler just couldn't see it or something couldn't be built when executing the go generate. It was fun still and I felt pretty comfortable using the grpc/protoc tool with golang as it handled much of the difficult and tedious tasks already, but I realize setting up the environment properly from the get go is also important to utilize this tool. I noticed the failure of the go:generate in api.go from Task 1 but didn't investigate any further as I was able to build the pb.go and grpc.pb.go from another command and didn't realize the importance of the 'protoc-gen-grpc-gateway' imports.
+
+## Task 5
+Unfotunately, I cannot complete this task without knowing more on how to generate the .pb.gw.go file or having further knowledge on using the `protoc-gen-grpc-gateway', and will not be attemping.

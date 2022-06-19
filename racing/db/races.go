@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -19,6 +20,7 @@ type RacesRepo interface {
 
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
+	UpdateAllRacesByColumn(races []*racing.Race)
 }
 
 type racesRepo struct {
@@ -34,13 +36,53 @@ func NewRacesRepo(db *sql.DB) RacesRepo {
 // Init prepares the race repository dummy data.
 func (r *racesRepo) Init() error {
 	var err error
+	var columnName string = "status"
 
 	r.init.Do(func() {
 		// For test/example purposes, we seed the DB with some dummy races.
 		err = r.seed()
+		err = r.addColumnToRacesTable(columnName)
 	})
 
 	return err
+}
+
+/*
+races: Races database in array.
+columnName: Name of the column in Races database.
+*/
+func (r *racesRepo) UpdateAllRacesByColumn(races []*racing.Race) {
+	// Column names within the array will be updated using switch statements to configure what types of update is necessary.
+	columnNames := []string{
+		"status",
+	}
+
+	// Can be configurable to add in different types of column names to update the database.
+	for _, columnName := range columnNames {
+		switch columnName {
+		case "status":
+			r.updateRaceStatus(races, columnName)
+		}
+	}
+}
+
+func (r *racesRepo) updateRaceStatus(races []*racing.Race, columnName string) {
+	var currentTime = time.Now()
+	const (
+		raceStatusOpen   string = "OPEN"
+		raceStatusClosed string = "CLOSED"
+	)
+
+	for _, race := range races {
+		raceID := strconv.Itoa(int(race.GetId()))
+
+		// Update the Races database status column after checking the GetAdvertisedStartTime().
+		if race.GetAdvertisedStartTime().AsTime().Before(currentTime) {
+			r.updateRacesTable(columnName, raceStatusClosed, raceID)
+		} else {
+			r.updateRacesTable(columnName, raceStatusOpen, raceID)
+		}
+	}
 }
 
 func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error) {
@@ -51,7 +93,6 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 	)
 
 	query = getRaceQueries()[racesList]
-
 	query, args = r.applyFilter(query, filter)
 
 	rows, err := r.db.Query(query, args...)
@@ -104,7 +145,7 @@ func (m *racesRepo) scanRaces(
 		var race racing.Race
 		var advertisedStart time.Time
 
-		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart); err != nil {
+		if err := rows.Scan(&race.Id, &race.MeetingId, &race.Name, &race.Number, &race.Visible, &advertisedStart, &race.Status); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, nil
 			}

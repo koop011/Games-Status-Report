@@ -28,3 +28,46 @@ func (r *racesRepo) seed() error {
 
 	return err
 }
+
+/*
+columnName: name of the column to be added to existing Races database.
+
+Called during racesRepo.Init().
+TODO: update to parse array of string to create multiple columnNames at the same time.
+*/
+func (r *racesRepo) addColumnToRacesTable(columnName string) error {
+
+	statement, err := r.db.Prepare(`ALTER TABLE races ADD ` + columnName + ` TEXT`)
+	if err == nil {
+		_, err = statement.Exec()
+	} else {
+		/*
+			This is a poor implementation of IF NOT EXIST call as it doesn't exist in sqlite3.
+			The above statement.Exec() will cause an error 'duplicate column name: status', if the source has be run previously.
+			This will ignore the duplicate column name, but may be vulnerable to other error statements.
+		*/
+		// TODO: update sql call with better error handling.
+		err = nil
+	}
+
+	return err
+}
+
+/*
+columnName: Name of the column in Races database.
+value: variable to insert into the database.
+id: id key value of each race.
+
+Called when receiving ListRacesRequest message to update the Races database using columnName and id key value of each races to update the database
+before ListRacesResponse is sent.
+*/
+func (r *racesRepo) updateRacesTable(columnName string, value string, id string) error {
+	var err error
+
+	statement, err := r.db.Prepare(`UPDATE races SET ` + columnName + ` = "` + value + `" WHERE id = ` + id)
+	if err == nil {
+		_, err = statement.Exec()
+	}
+
+	return err
+}

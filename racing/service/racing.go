@@ -28,7 +28,9 @@ func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesReque
 	if err != nil {
 		return nil, err
 	}
+
 	races = raceReportSortByAdvertisedTime(races)
+	s.racesRepo.UpdateAllRacesByColumn(races)
 
 	return &racing.ListRacesResponse{Races: races}, nil
 }

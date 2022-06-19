@@ -21,6 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 type ListRacesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

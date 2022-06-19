@@ -1,6 +1,8 @@
 package service
 
 import (
+	"sort"
+
 	"git.neds.sh/matty/entain/racing/db"
 	"git.neds.sh/matty/entain/racing/proto/racing"
 	"golang.org/x/net/context"
@@ -26,6 +28,17 @@ func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesReque
 	if err != nil {
 		return nil, err
 	}
+	races = raceReportSortByAdvertisedTime(races)
 
 	return &racing.ListRacesResponse{Races: races}, nil
+}
+
+// TODO: update function to parse in user preference of sort order via filter sortByTime, 'sort-low-high' and 'sort-high-low'
+func raceReportSortByAdvertisedTime(races []*racing.Race) []*racing.Race {
+	// due to timestamppb package, the race[].GetAdvertisedStartTime() is converted again to UTC before sorting to
+	// earliest to latest.
+	sort.SliceStable(races, func(i, j int) bool {
+		return races[i].GetAdvertisedStartTime().AsTime().Before(races[j].GetAdvertisedStartTime().AsTime())
+	})
+	return races
 }

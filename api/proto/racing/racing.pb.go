@@ -23,6 +23,7 @@ const (
 )
 
 // Request for ListRaces call.
+// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 type ListRacesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

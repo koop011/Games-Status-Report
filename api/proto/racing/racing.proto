@@ -19,7 +19,6 @@ service Racing {
 /* Requests/Responses */
 
 // Request for ListRaces call.
-// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
 }
@@ -33,6 +32,7 @@ message ListRacesResponse {
 message ListRacesRequestFilter {
   repeated int64 meeting_ids = 1;
   repeated bool race_visibility = 2;
+  SortOrder sort_order = 3;
 }
 
 message GetRaceRequest {
@@ -42,6 +42,15 @@ message GetRaceRequest {
 message GetRaceResponse {
   repeated Race race = 1;
 }
+
+// Additional sort order user/operator can specify.
+message SortOrder {
+  optional bool low_to_high = 1;
+  optional bool alphabetical = 2;
+  optional bool earliest_to_latest = 3;
+  optional string ordered_item = 4;
+}
+
 
 /* Resources */
 

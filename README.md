@@ -67,3 +67,76 @@ Unfortuantely I don't have much to say other than my lack of knowledge in this a
 
 ## Task 5
 Unfotunately, I cannot complete this task without knowing more on how to generate the .pb.gw.go file or having further knowledge on using the `protoc-gen-grpc-gateway', and will not be attemping.
+
+## Bonus Tasks
+I've implemented a few of the common search methods which uses integers. I've tried to implement for names (alphabetical) but realized soon that it was not so simple as I need to access the individual race records from all races, then check their names and compare alphabetical order for both first and last names. Perhpas I was using the sort package wrong but I couldn't find a simmple answer before my time ran out.
+
+The followings commands are some of the sort available (bool values interchangeable):
+```
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1],
+    "sort_order": {
+        "ordered_item":"start time",
+        "earliest_to_latest":true
+        }
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "sort_order": {
+        "ordered_item":"id",
+        "low_to_high":true
+        }
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "sort_order": {
+        "ordered_item":"number",
+        "low_to_high":false
+        }
+    }
+}'
+
+// allows default sort on GetAdvertisedStartTime()
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1]
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1],
+    "race_visibility":[false]
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1,2,3,4,5],
+    "sort_order": {
+        "ordered_item":"meetingid",
+        "low_to_high":true
+        },
+    "race_visibility":[true]
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1,2,3,4,5],
+    "sort_order": {
+        "ordered_item":"meetingid",
+        "low_to_high":true
+        },
+    "race_visibility":[true]
+    }
+}'
+```
+
+### Bonus Tasks - Reflection
+During the testing for all the commands, I noticed there was a spelling mistake which I haven't noticed until now. Even though it's a quick fix, because I didn't create the PR at the end of each task, but all at the same time,it was missed. My plan was to go through all of the PRs again for such mistakes at the end for the final submission but I caught it during my bonus task. My usual process of working is to double check the PR I created when I create them and fix as necessary. Although, due to the time pressure I had and hoping to submit all PRs at the same time, it was missed until the end.

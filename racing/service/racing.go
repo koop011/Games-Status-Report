@@ -35,7 +35,7 @@ func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesReque
 	return &racing.ListRacesResponse{Races: races}, nil
 }
 
-// TODO: update function to parse in user preference of sort order via filter sortByTime, 'sort-low-high' and 'sort-high-low'
+// Allow user to sort based on SortOrder message.
 func raceReportSort(races []*racing.Race, in *racing.ListRacesRequest) []*racing.Race {
 	orderedItem := in.GetFilter().GetSortOrder().GetOrderedItem()
 	lowToHigh := in.GetFilter().GetSortOrder().GetLowToHigh()

@@ -14,7 +14,6 @@ service Racing {
 
 /* Requests/Responses */
 
-// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
 }
@@ -39,7 +38,14 @@ message GetRaceResponse {
   repeated Race race = 1;
 }
 
-// Additional sort order user/operator can specify.
+/* 
+Additional sort order user/operator can specify.
+
+low_to_high: indicate integer sorting from lowest to highest number.
+alphabetical: indicate alphabetical sorting from a-z.
+earliest_to_latest: indicate earliest time to latest time for advertised start time sorting.
+ordered_item: type of key value from the races (e.g. id|meetingid|name|number|start time) to sort.
+*/
 message SortOrder {
   optional bool low_to_high = 1;
   optional bool alphabetical = 2;

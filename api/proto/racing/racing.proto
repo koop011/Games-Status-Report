@@ -19,7 +19,6 @@ service Racing {
 /* Requests/Responses */
 
 // Request for ListRaces call.
-// TODO: create new Request item 'sort'|'order' to allow user to pick and choose the type of sorting they want.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
 }

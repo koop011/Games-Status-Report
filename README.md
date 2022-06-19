@@ -115,6 +115,27 @@ $ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: ap
     }
 }'
 
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1,2,3,4,5],
+    "sort_order": {
+        "ordered_item":"meetingid",
+        "low_to_high":true
+        },
+    "race_visibility":[true]
+    }
+}'
+
+$ curl -X "POST" "http://localhost:8000/v1/list-races"      -H 'Content-Type: application/json'      -d $'{
+  "filter": {
+    "meeting_ids":[1,2,3,4,5],
+    "sort_order": {
+        "ordered_item":"meetingid",
+        "low_to_high":true
+        },
+    "race_visibility":[true]
+    }
+}'
 ```
 
 ### Bonus Tasks - Reflection

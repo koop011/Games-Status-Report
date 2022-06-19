@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"sort"
 
 	"git.neds.sh/matty/entain/racing/db"
@@ -30,8 +29,7 @@ func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesReque
 	if err != nil {
 		return nil, err
 	}
-	log.Print(in.GetFilter().GetRaceVisibility())
-	races = raceReportSort(races, in)
+	raceReportSort(races, in)
 	s.racesRepo.UpdateAllRacesByColumn(races)
 
 	return &racing.ListRacesResponse{Races: races}, nil
@@ -45,7 +43,6 @@ func raceReportSort(races []*racing.Race, in *racing.ListRacesRequest) []*racing
 	// alphabetical := in.GetFilter().GetSortOrder().GetAlphabetical()
 	earliest_to_latest := in.GetFilter().GetSortOrder().GetEarliestToLatest()
 	const forced_default_earliest_to_latest = true
-	log.Printf("E: %v and O: %v", earliest_to_latest, orderedItem)
 
 	switch orderedItem {
 	case "start time":
@@ -61,7 +58,6 @@ func raceReportSort(races []*racing.Race, in *racing.ListRacesRequest) []*racing
 	// 	sortByName(races, alphabetical)
 	default:
 		sortByAdvertisedStartTime(races, forced_default_earliest_to_latest)
-
 	}
 
 	return races
@@ -77,6 +73,7 @@ func sortByNumber(races []*racing.Race, lowToHigh bool) []*racing.Race {
 			return races[i].GetNumber() > races[j].GetNumber()
 		})
 	}
+
 	return races
 }
 
@@ -90,6 +87,7 @@ func sortByMeetingId(races []*racing.Race, lowToHigh bool) []*racing.Race {
 			return races[i].GetMeetingId() > races[j].GetMeetingId()
 		})
 	}
+
 	return races
 }
 
@@ -103,15 +101,8 @@ func sortById(races []*racing.Race, lowToHigh bool) []*racing.Race {
 			return races[i].GetId() > races[j].GetId()
 		})
 	}
+
 	return races
-}
-
-func sortMeetingid() {
-
-}
-
-func sortNumber() {
-
 }
 
 func sortByAdvertisedStartTime(races []*racing.Race, earliest_to_latest bool) []*racing.Race {
@@ -131,11 +122,11 @@ func sortByAdvertisedStartTime(races []*racing.Race, earliest_to_latest bool) []
 }
 
 func (s *racingService) GetRace(ctx context.Context, in *racing.GetRaceRequest) (*racing.GetRaceResponse, error) {
-	log.Print(in.GetRaceId())
 	race, err := s.racesRepo.GetRace(in.RaceId)
+
 	if err != nil {
 		return nil, err
 	}
-	log.Print(in.GetRaceId())
+
 	return &racing.GetRaceResponse{Race: race}, nil
 }

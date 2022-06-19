@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"sort"
 
 	"git.neds.sh/matty/entain/racing/db"
@@ -11,6 +12,7 @@ import (
 type Racing interface {
 	// ListRaces will return a collection of races.
 	ListRaces(ctx context.Context, in *racing.ListRacesRequest) (*racing.ListRacesResponse, error)
+	GetRace(ctx context.Context, in *racing.GetRaceRequest) (*racing.GetRaceResponse, error)
 }
 
 // racingService implements the Racing interface.
@@ -43,4 +45,14 @@ func raceReportSortByAdvertisedTime(races []*racing.Race) []*racing.Race {
 		return races[i].GetAdvertisedStartTime().AsTime().Before(races[j].GetAdvertisedStartTime().AsTime())
 	})
 	return races
+}
+
+func (s *racingService) GetRace(ctx context.Context, in *racing.GetRaceRequest) (*racing.GetRaceResponse, error) {
+	log.Print(in.GetRaceId())
+	race, err := s.racesRepo.GetRace(in.RaceId)
+	if err != nil {
+		return nil, err
+	}
+	log.Print(in.GetRaceId())
+	return &racing.GetRaceResponse{Race: race}, nil
 }

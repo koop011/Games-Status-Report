@@ -55,8 +55,8 @@ func (r *racesRepo) addColumnToRacesTable(columnName string) error {
 
 /*
 columnName: Name of the column in Races database.
-value: variable to insert into the database based.
-id: Races database id key value.
+value: variable to insert into the database.
+id: id key value of each race.
 
 Called when receiving ListRacesRequest message to update the Races database using columnName and id key value of each races to update the database
 before ListRacesResponse is sent.

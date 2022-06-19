@@ -162,11 +162,11 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		}
 	}
 
-	if len(filter.RaceVisibilty) > 0 {
-		clauses = append(clauses, "visible IN ("+strings.Repeat("?,", len(filter.RaceVisibilty)-1)+"?)")
+	if len(filter.RaceVisibility) > 0 {
+		clauses = append(clauses, "visible IN ("+strings.Repeat("?,", len(filter.RaceVisibility)-1)+"?)")
 
-		for _, raceVisibilty := range filter.RaceVisibilty {
-			args = append(args, raceVisibilty)
+		for _, raceVisibility := range filter.RaceVisibility {
+			args = append(args, raceVisibility)
 		}
 	}
 

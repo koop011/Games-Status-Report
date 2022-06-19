@@ -39,8 +39,7 @@ message GetRaceResponse {
   repeated Race race = 1;
 }
 
-// TODO: have better sort order definition 
-// (e.g. advertised time: earliest_to_latest, name: alphabetical, id/number/meetingid: low_to_high,)
+// Additional sort order user/operator can specify.
 message SortOrder {
   optional bool low_to_high = 1;
   optional bool alphabetical = 2;

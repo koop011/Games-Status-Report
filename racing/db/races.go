@@ -21,6 +21,7 @@ type RacesRepo interface {
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
 	UpdateAllRacesByColumn(races []*racing.Race)
+	GetRace(race_id int64) ([]*racing.Race, error)
 }
 
 type racesRepo struct {
@@ -85,6 +86,24 @@ func (r *racesRepo) updateRaceStatus(races []*racing.Race, columnName string) {
 	}
 }
 
+func (r *racesRepo) GetRace(race_id int64) ([]*racing.Race, error) {
+	var (
+		err   error
+		query string
+		args  []interface{}
+	)
+
+	query = getRaceQueries()[racesList]
+	query, args = r.applyFindRaceById(query, race_id)
+
+	row, err := r.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.scanRaces(row)
+}
+
 func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error) {
 	var (
 		err   error
@@ -101,6 +120,28 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 	}
 
 	return r.scanRaces(rows)
+}
+
+// Build up query call for database search for a single race request.
+func (r *racesRepo) applyFindRaceById(query string, race_id int64) (string, []interface{}) {
+	var (
+		clauses []string
+		args    []interface{}
+	)
+
+	if race_id <= 0 {
+		return query, args
+	}
+
+	// TODO: verify with proper gateway built.
+	clauses = append(clauses, "id IN (?,?,?)")
+	args = append(args, race_id)
+
+	if len(clauses) != 0 {
+		query += " WHERE " + strings.Join(clauses, " AND ")
+	}
+
+	return query, args
 }
 
 func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFilter) (string, []interface{}) {
